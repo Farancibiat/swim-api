@@ -1,0 +1,90 @@
+{
+    "compilerOptions": {
+      /* Language and Environment */
+      "target": "ES2022",
+      "lib": ["ES2022"],
+      "module": "commonjs",
+      "moduleResolution": "node",
+      
+      /* Modules */
+      "esModuleInterop": true,
+      "allowSyntheticDefaultImports": true,
+      "resolveJsonModule": true,
+      "allowImportingTsExtensions": false,
+      
+      /* Emit */
+      "outDir": "./dist",
+      "rootDir": "./src",
+      "declaration": false,
+      "declarationMap": false,
+      "sourceMap": true,
+      "removeComments": true,
+      "importHelpers": false,
+      "downlevelIteration": true,
+      "newLine": "lf",
+      
+      /* Interop Constraints */
+      "isolatedModules": true,
+      "allowJs": false,
+      "checkJs": false,
+      
+      /* Type Checking */
+      "strict": true,
+      "noImplicitAny": true,
+      "strictNullChecks": true,
+      "strictFunctionTypes": true,
+      "strictBindCallApply": true,
+      "strictPropertyInitialization": true,
+      "noImplicitThis": true,
+      "useUnknownInCatchVariables": true,
+      "alwaysStrict": true,
+      "noUnusedLocals": true,
+      "noUnusedParameters": true,
+      "exactOptionalPropertyTypes": true,
+      "noImplicitReturns": true,
+      "noFallthroughCasesInSwitch": true,
+      "noUncheckedIndexedAccess": true,
+      "noImplicitOverride": true,
+      "noPropertyAccessFromIndexSignature": false,
+      
+      /* Completeness */
+      "skipLibCheck": true,
+      "forceConsistentCasingInFileNames": true,
+      
+      /* Advanced */
+      "typeRoots": ["./node_modules/@types", "./src/types"],
+      "types": ["node"],
+      "experimentalDecorators": false,
+      "emitDecoratorMetadata": false,
+      
+      /* Path Mapping */
+      "baseUrl": "./src",
+      "paths": {
+        "@/*": ["*"],
+        "@/config/*": ["config/*"],
+        "@/controllers/*": ["controllers/*"],
+        "@/middleware/*": ["middleware/*"],
+        "@/models/*": ["models/*"],
+        "@/routes/*": ["routes/*"],
+        "@/utils/*": ["utils/*"],
+        "@/constants/*": ["constants/*"],
+        "@/types/*": ["types/*"]
+      }
+    },
+    "include": [
+      "src/**/*",
+      "scripts/**/*"
+    ],
+    "exclude": [
+      "node_modules",
+      "dist",
+      "**/*.test.ts",
+      "**/*.spec.ts",
+      "coverage",
+      "docs"
+    ],
+    "ts-node": {
+      "esm": false,
+      "experimentalSpecifierResolution": "node"
+    }
+}
