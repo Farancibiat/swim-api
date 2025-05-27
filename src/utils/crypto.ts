@@ -87,7 +87,7 @@ export const comparePassword = async (password: string, hashedPassword: string):
  * @param rounds Número de rounds (se ignora, solo por compatibilidad)
  * @returns Salt generado
  */
-export const genSalt = async (rounds?: number): Promise<string> => {
+export const genSalt = async (): Promise<string> => {
   return crypto.randomBytes(32).toString('hex');
 };
 
