@@ -82,7 +82,7 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
     }
     
     // Hash de la contraseña
-    const salt = await crypto.genSalt(10);
+    const salt = await crypto.genSalt();
     const hashedPassword = await crypto.hash(password, salt);
     
     const newUser = await prisma.user.create({

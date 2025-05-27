@@ -26,7 +26,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     }
 
     // Hash de la contraseña
-    const salt = await crypto.genSalt(10);
+    const salt = await crypto.genSalt();
     const hashedPassword = await crypto.hash(password, salt);
 
     // Crear el usuario
@@ -191,7 +191,7 @@ export const updateProfile = async (req: Request, res: Response): Promise<void> 
       }
 
       // Hash de la nueva contraseña
-      const salt = await crypto.genSalt(10);
+      const salt = await crypto.genSalt();
       updateData.password = await crypto.hash(newPassword, salt);
     }
 
