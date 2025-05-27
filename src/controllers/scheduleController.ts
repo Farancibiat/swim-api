@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import prisma from '@/config/db';
+import { sendMessage } from '@/utils/responseHelper';
 
 // Obtener todos los horarios
 export const getAllSchedules = async (_req: Request, res: Response): Promise<void> => {
@@ -14,10 +15,10 @@ export const getAllSchedules = async (_req: Request, res: Response): Promise<voi
       ],
     });
 
-    res.json(schedules);
+    sendMessage(res, 'SCHEDULE_LIST_RETRIEVED', schedules);
   } catch (error) {
     console.error('Error al obtener horarios:', error);
-    res.status(500).json({ error: 'Error al obtener horarios de natación' });
+    sendMessage(res, 'SCHEDULE_FETCH_ERROR');
   }
 };
 
@@ -26,19 +27,24 @@ export const getScheduleById = async (req: Request, res: Response): Promise<void
   try {
     const { id } = req.params;
     
+    if (!id || isNaN(Number(id))) {
+      sendMessage(res, 'SCHEDULE_INVALID_ID');
+      return;
+    }
+    
     const schedule = await prisma.swimmingSchedule.findUnique({
       where: { id: Number(id) },
     });
     
     if (!schedule) {
-      res.status(404).json({ error: 'Horario no encontrado' });
+      sendMessage(res, 'SCHEDULE_NOT_FOUND');
       return;
     }
     
-    res.json(schedule);
+    sendMessage(res, 'SCHEDULE_RETRIEVED', schedule);
   } catch (error) {
     console.error('Error al obtener horario:', error);
-    res.status(500).json({ error: 'Error al obtener horario de natación' });
+    sendMessage(res, 'SCHEDULE_FETCH_ERROR');
   }
 };
 
@@ -49,9 +55,7 @@ export const createSchedule = async (req: Request, res: Response): Promise<void>
     
     // Validar datos de entrada
     if (!dayOfWeek || !startTime || !endTime || !maxCapacity || !laneCount) {
-      res.status(400).json({ 
-        error: 'Por favor proporciona todos los campos requeridos: día de la semana, hora de inicio, hora de fin, capacidad máxima y número de carriles' 
-      });
+      sendMessage(res, 'SCHEDULE_MISSING_REQUIRED_FIELDS');
       return;
     }
     
@@ -67,10 +71,10 @@ export const createSchedule = async (req: Request, res: Response): Promise<void>
       },
     });
     
-    res.status(201).json(newSchedule);
+    sendMessage(res, 'SCHEDULE_CREATED', newSchedule);
   } catch (error) {
     console.error('Error al crear horario:', error);
-    res.status(500).json({ error: 'Error al crear horario de natación' });
+    sendMessage(res, 'SCHEDULE_CREATE_ERROR');
   }
 };
 
@@ -79,6 +83,11 @@ export const updateSchedule = async (req: Request, res: Response): Promise<void>
   try {
     const { id } = req.params;
     const { dayOfWeek, startTime, endTime, maxCapacity, laneCount, isActive } = req.body;
+    
+    if (!id || isNaN(Number(id))) {
+      sendMessage(res, 'SCHEDULE_INVALID_ID');
+      return;
+    }
     
     // Preparar datos para actualización
     const updateData: any = {};
@@ -96,10 +105,10 @@ export const updateSchedule = async (req: Request, res: Response): Promise<void>
       data: updateData,
     });
     
-    res.json(updatedSchedule);
+    sendMessage(res, 'SCHEDULE_UPDATED', updatedSchedule);
   } catch (error) {
     console.error('Error al actualizar horario:', error);
-    res.status(500).json({ error: 'Error al actualizar horario de natación' });
+    sendMessage(res, 'SCHEDULE_UPDATE_ERROR');
   }
 };
 
@@ -107,6 +116,11 @@ export const updateSchedule = async (req: Request, res: Response): Promise<void>
 export const deleteSchedule = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
+    
+    if (!id || isNaN(Number(id))) {
+      sendMessage(res, 'SCHEDULE_INVALID_ID');
+      return;
+    }
     
     // Verificar si hay reservas asociadas
     const reservationsCount = await prisma.reservation.count({
@@ -120,7 +134,7 @@ export const deleteSchedule = async (req: Request, res: Response): Promise<void>
         data: { isActive: false },
       });
       
-      res.json({ message: 'Horario desactivado correctamente. No se eliminó completamente debido a que tiene reservas asociadas.' });
+      sendMessage(res, 'SCHEDULE_DEACTIVATED');
       return;
     }
     
@@ -129,10 +143,10 @@ export const deleteSchedule = async (req: Request, res: Response): Promise<void>
       where: { id: Number(id) },
     });
     
-    res.json({ message: 'Horario eliminado correctamente' });
+    sendMessage(res, 'SCHEDULE_DELETED');
   } catch (error) {
     console.error('Error al eliminar horario:', error);
-    res.status(500).json({ error: 'Error al eliminar horario de natación' });
+    sendMessage(res, 'SCHEDULE_DELETE_ERROR');
   }
 };
 
@@ -142,7 +156,7 @@ export const checkAvailability = async (req: Request, res: Response): Promise<vo
     const { scheduleId, date } = req.query;
     
     if (!scheduleId || !date) {
-      res.status(400).json({ error: 'Por favor proporciona el ID del horario y la fecha' });
+      sendMessage(res, 'RESERVATION_MISSING_AVAILABILITY_DATA');
       return;
     }
     
@@ -152,7 +166,7 @@ export const checkAvailability = async (req: Request, res: Response): Promise<vo
     });
     
     if (!schedule) {
-      res.status(404).json({ error: 'Horario no encontrado' });
+      sendMessage(res, 'SCHEDULE_NOT_FOUND');
       return;
     }
     
@@ -170,16 +184,18 @@ export const checkAvailability = async (req: Request, res: Response): Promise<vo
     // Calcular disponibilidad
     const availableSpots = Math.max(0, schedule.maxCapacity - reservationsCount);
     
-    res.json({
+    const availabilityData = {
       schedule,
       date,
       totalCapacity: schedule.maxCapacity,
       reservedSpots: reservationsCount,
       availableSpots,
       isFull: availableSpots === 0,
-    });
+    };
+    
+    sendMessage(res, 'SCHEDULE_AVAILABILITY_CHECKED', availabilityData);
   } catch (error) {
     console.error('Error al verificar disponibilidad:', error);
-    res.status(500).json({ error: 'Error al verificar disponibilidad del horario' });
+    sendMessage(res, 'SCHEDULE_AVAILABILITY_ERROR');
   }
 }; 

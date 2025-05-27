@@ -6,12 +6,25 @@ export const MESSAGES = {
     APP_WELCOME: 'API de Reservas de Piscina',
     USER_LIST_RETRIEVED: 'Lista de usuarios obtenida correctamente',
     USER_RETRIEVED: 'Usuario obtenido correctamente',
+    SCHEDULE_LIST_RETRIEVED: 'Lista de horarios obtenida correctamente',
+    SCHEDULE_RETRIEVED: 'Horario obtenido correctamente',
+    SCHEDULE_UPDATED: 'Horario actualizado correctamente',
+    SCHEDULE_DELETED: 'Horario eliminado correctamente',
+    SCHEDULE_DEACTIVATED: 'Horario desactivado correctamente debido a reservas asociadas',
+    SCHEDULE_AVAILABILITY_CHECKED: 'Disponibilidad verificada correctamente',
+    RESERVATION_LIST_RETRIEVED: 'Lista de reservas obtenida correctamente',
+    RESERVATION_USER_LIST_RETRIEVED: 'Reservas del usuario obtenidas correctamente',
+    RESERVATION_RETRIEVED: 'Reserva obtenida correctamente',
+    RESERVATION_CANCELLED: 'Reserva cancelada correctamente',
+    RESERVATION_PAYMENT_CONFIRMED: 'Pago confirmado correctamente',
+    RESERVATION_COMPLETED: 'Reserva marcada como completada',
   },
 
   201: {
     AUTH_REGISTER: 'Usuario registrado correctamente',
     RESERVATION_CREATED: 'Reserva creada correctamente',
     USER_CREATED: 'Usuario creado correctamente',
+    SCHEDULE_CREATED: 'Horario creado correctamente',
   },
 
   400: {
@@ -22,6 +35,17 @@ export const MESSAGES = {
     USER_MISSING_REQUIRED_FIELDS: 'Email, contraseña y nombre son requeridos',
     USER_EMAIL_ALREADY_EXISTS: 'Este email ya está registrado',
     USER_INVALID_ID: 'ID de usuario inválido',
+    SCHEDULE_MISSING_REQUIRED_FIELDS: 'Por favor proporciona todos los campos requeridos: día de la semana, hora de inicio, hora de fin, capacidad máxima y número de carriles',
+    SCHEDULE_INVALID_ID: 'ID de horario inválido',
+    SCHEDULE_INACTIVE: 'Este horario no está disponible',
+    RESERVATION_MISSING_REQUIRED_FIELDS: 'Por favor proporciona el ID del horario y la fecha',
+    RESERVATION_NO_CAPACITY: 'No hay cupos disponibles para este horario en la fecha seleccionada',
+    RESERVATION_ALREADY_EXISTS: 'Ya tienes una reserva para este horario en la fecha seleccionada',
+    RESERVATION_CANNOT_CANCEL_COMPLETED: 'No se puede cancelar una reserva ya completada',
+    RESERVATION_CANNOT_CONFIRM_CANCELLED: 'No se puede confirmar el pago de una reserva cancelada',
+    RESERVATION_CANNOT_COMPLETE_CANCELLED: 'No se puede completar una reserva cancelada',
+    RESERVATION_MISSING_PAYMENT_DATA: 'Por favor proporciona el monto y método de pago',
+    RESERVATION_MISSING_AVAILABILITY_DATA: 'Por favor proporciona el ID del horario y la fecha',
   },
 
   401: {
@@ -31,15 +55,20 @@ export const MESSAGES = {
     AUTH_INVALID_CREDENTIALS: 'Credenciales inválidas',
     AUTH_ACCOUNT_DISABLED: 'Tu cuenta está desactivada. Por favor contacta al administrador.',
     AUTH_WRONG_CURRENT_PASSWORD: 'Contraseña actual incorrecta',
+    RESERVATION_NOT_AUTHENTICATED: 'No autenticado',
   },
 
   403: {
     AUTH_INSUFFICIENT_PERMISSIONS: 'No tienes permiso para realizar esta acción',
+    RESERVATION_INSUFFICIENT_PERMISSIONS: 'No tienes permiso para ver esta reserva',
+    RESERVATION_CANCEL_INSUFFICIENT_PERMISSIONS: 'No tienes permiso para cancelar esta reserva',
   },
 
   404: {
     AUTH_USER_NOT_FOUND: 'Usuario no encontrado',
     USER_NOT_FOUND: 'Usuario no encontrado',
+    SCHEDULE_NOT_FOUND: 'Horario no encontrado',
+    RESERVATION_NOT_FOUND: 'Reserva no encontrada',
   },
 
   500: {
@@ -49,5 +78,15 @@ export const MESSAGES = {
     AUTH_UPDATE_ERROR: 'Error al actualizar perfil',
     USER_FETCH_ERROR: 'Error al obtener usuarios',
     USER_CREATE_ERROR: 'Error al crear usuario',
+    SCHEDULE_FETCH_ERROR: 'Error al obtener horarios de natación',
+    SCHEDULE_CREATE_ERROR: 'Error al crear horario de natación',
+    SCHEDULE_UPDATE_ERROR: 'Error al actualizar horario de natación',
+    SCHEDULE_DELETE_ERROR: 'Error al eliminar horario de natación',
+    SCHEDULE_AVAILABILITY_ERROR: 'Error al verificar disponibilidad del horario',
+    RESERVATION_FETCH_ERROR: 'Error al obtener reservas',
+    RESERVATION_CREATE_ERROR: 'Error al crear reserva',
+    RESERVATION_CANCEL_ERROR: 'Error al cancelar reserva',
+    RESERVATION_PAYMENT_ERROR: 'Error al confirmar pago de la reserva',
+    RESERVATION_COMPLETE_ERROR: 'Error al marcar reserva como completada',
   },
 } as const;

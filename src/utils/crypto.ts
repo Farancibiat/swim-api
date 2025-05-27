@@ -6,7 +6,7 @@ import crypto from 'crypto';
 const HASH_CONFIG = {
   iterations: 100000, // Número de iteraciones (equivalente a cost 10 de bcrypt)
   keyLength: 64, // Longitud de la clave en bytes
-  digest: 'sha512' // Algoritmo de hash
+  digest: 'sha512' as const // Algoritmo de hash
 };
 
 /**
@@ -47,14 +47,27 @@ export const comparePassword = async (password: string, hashedPassword: string):
       throw new Error('Formato de hash inválido');
     }
     
-    const [iterations, keyLength, salt, originalHash] = parts;
+    const [iterationsStr, keyLengthStr, salt, originalHash] = parts;
+    
+    // Validar que todos los componentes existen
+    if (!iterationsStr || !keyLengthStr || !salt || !originalHash) {
+      throw new Error('Componentes del hash faltantes');
+    }
+    
+    const iterations = parseInt(iterationsStr, 10);
+    const keyLength = parseInt(keyLengthStr, 10);
+    
+    // Validar que los números son válidos
+    if (isNaN(iterations) || isNaN(keyLength)) {
+      throw new Error('Parámetros numéricos inválidos en el hash');
+    }
     
     // Recrear el hash con la misma configuración
     const hash = crypto.pbkdf2Sync(
       password,
       salt,
-      parseInt(iterations),
-      parseInt(keyLength),
+      iterations,
+      keyLength,
       HASH_CONFIG.digest
     ).toString('hex');
     
